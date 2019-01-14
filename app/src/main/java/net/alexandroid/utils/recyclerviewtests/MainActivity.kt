@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -29,11 +31,18 @@ class MainActivity : AppCompatActivity() {
             // specify an viewAdapter (see also next example)
             adapter = viewAdapter
         }
+
+        swipeRefresh.setOnRefreshListener(this)
+    }
+
+    //SwipeRefreshLayout.OnRefreshListener
+    override fun onRefresh() {
+        swipeRefresh.postDelayed({ swipeRefresh.isRefreshing = false }, 1000)
     }
 
     private fun getMyDataSet(): ArrayList<String> {
         val list = arrayListOf<String>()
-        for(x in 1..100) {
+        for (x in 0..100) {
             list.add("$x")
         }
         return list

@@ -2,21 +2,34 @@ package net.alexandroid.utils.recyclerviewtests
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created on 1/13/2019 by Alexey Korolev.
  */
-class MyAdapter(private val myDataset: List<String>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter(private val myData: List<String>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
+    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView),View.OnClickListener {
+        init {
+            textView.setOnClickListener(this)
+        }
 
-    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
+        override fun onClick(v: View?) {
+            if(adapterPosition != RecyclerView.NO_POSITION) {
+                Toast.makeText(v?.context, "Position: $adapterPosition", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
         // create a new view
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.item_my, parent, false) as TextView
+
         // set the view's size, margins, paddings and layout parameters
         return MyViewHolder(textView)
     }
@@ -25,18 +38,29 @@ class MyAdapter(private val myDataset: List<String>) : RecyclerView.Adapter<MyAd
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.text = myDataset[position]
+        holder.textView.text = myData[position]
         holder.textView.setBackgroundColor(getColorByPosition(position))
     }
 
     private fun getColorByPosition(position: Int): Int {
-        return if (position % 2 == 0) {
-            Color.LTGRAY
-        } else {
-            Color.CYAN
+        var pos = position
+        while (pos > 9) pos %= 10
+
+        return when (pos) {
+            0 -> Color.RED
+            1 -> Color.parseColor("#FFA500") // orange
+            2 -> Color.YELLOW
+            3 -> Color.GREEN
+            4 -> Color.CYAN
+            5 -> Color.BLUE
+            6 -> Color.parseColor("#800080") //purple
+            7 -> Color.LTGRAY
+            8 -> Color.DKGRAY
+            9 -> Color.MAGENTA
+            else -> Color.BLACK
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = myDataset.size
+    override fun getItemCount() = myData.size
 }
