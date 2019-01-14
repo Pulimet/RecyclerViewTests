@@ -2,7 +2,6 @@ package net.alexandroid.utils.recyclerviewtests
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,7 +11,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var customLayoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,16 +20,20 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         MyLog.init(this, "ZAQ", true)
         MyLog.e("=============== ON CREATE ===============")
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = MyAdapter(getMyDataSet())
+        customLayoutManager = CustomLayoutManager(this)
+
+        viewAdapter = MyAdapter(getMyDataSet()).apply {
+            // TODO
+            //setHasStableIds(true)
+        }
 
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
             setHasFixedSize(true)
 
-            // use a linear layout manager
-            layoutManager = viewManager
+            // use a linear layout customLayoutManager
+            layoutManager = customLayoutManager
 
             // specify an viewAdapter (see also next example)
             adapter = viewAdapter
